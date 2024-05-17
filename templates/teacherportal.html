@@ -1,9 +1,10 @@
-{% extends 'base2.html' %}
+{% extends 'base1.html' %}
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-  {% block content %}
+  {% block body %}
+
   <body>
   <section class="page-title-section overlay" data-background="{{ url_for('static', filename='images/backgrounds/page-title.jpg')}}">
     <div class="container">
@@ -12,30 +13,31 @@
           <ul class="list-inline custom-breadcrumb mb-2">
             <li class="list-inline-item">
               <a class="h2 text-primary font-secondary" >
-                Assistant Dashboard</a>
+                Faculty Dashboard</a>
               </li>
   
           </ul>
-          <p class="text-lighten mb-0">This page for assistant who will be helping different aspirants to apply on their dream univiersities.</p>
-          <p class="text-lighten mb-0">Below are some information of all aspirants who showed interest in applying to different universities so check out and apply for them.</p>
-          <p class="text-lighten mb-0">By refering to their information and documents they submitted you will be able to apply for them and send them admission letter as soon received.</p>
+          <p class="text-lighten mb-0">This is the page for the faculties to be able to view the submitted student feedback.</p>
+          <p class="text-lighten mb-0">Below are some information cards for different courses and depending on the course or subject you teach you will click on that particular card of your course and be able to view student feedback submitted.</p>
+          <p class="text-lighten mb-0">For each student feedback submitted, you will be able to summarize the course feedback given and get main ideas as well.</p>
         </div>
       </div>
     </div>
   </section>
-  <h2 style="margin-top: 2%; text-align: center;">information of aspirants who applied for universities</h2>
+  <h2 style="margin-top: 2%; text-align: center;">Select course stream you are intersted in </h2>
+
   <div class="row" style="margin-bottom: 10%; margin-top: 2%;">
-    {% for studentportal in studentportals %}
+    {% for studentdetails in studentdetail %}
     <div class="col-md-4">
-      <div class="card h-100" id="card-{{ studentportal.id }}">
+      <div class="card h-100" id="card-{{ studentdetails.id }}">
         <div class="card-body">
-          <h5 class="card-title">{{ studentportal.name }}</h5>
+          <h5 class="card-title">{{ studentdetails.name }}</h5>
           <p class="card-text">
-            <strong>Date of Birth:</strong> {{ studentportal.date_of_birth }}<br>
+            <strong>Roll Number:</strong> {{ studentdetails.rname }}<br>
           
 
-            <strong>Sender Email:</strong> {{ studentportal.senderemail }}<br>
-            <strong>Status Type:</strong> {{ studentportal.statustype }}<br>
+            <strong>Course Stream:</strong> {{ studentdetails.cse}}<br>
+            <strong>Course Stream:</strong> {{ studentportal.statustype }}<br>
             <strong>Email:</strong> {{ studentportal.email }}<br>
             <strong>Phone number:</strong> {{ studentportal.pnumber }}<br>
             <strong>Address:</strong> {{ studentportal.address }}<br>

@@ -31,7 +31,7 @@
 }
 </style>
 <body>
-  <section class="page-title-section overlay" data-background="{{ url_for('static', filename='images/banner/mepics.jpg')}}" style="background-repeat: no-repeat; background-size: cover;">
+  <section class="page-title-section overlay" data-background="{{ url_for('static', filename='images/events/analyzepc.jpg')}}" style="background-repeat: no-repeat; background-size: cover;">
     <div class="container">
       <div class="row">
         <div class="col-md-8" style="margin-top: 10%;">
@@ -39,7 +39,7 @@
             <li class="list-inline-item"><a class="h2 text-primary font-secondary" href="/">Home</a></li>
             <li class="list-inline-item text-white h3 font-secondary nasted">Login</li>
           </ul>
-          <p class="text-lighten mb-0">This is your login page for the assistant for those who are able to assist our aspirants regarding their applications</p>
+          <p class="text-lighten mb-0">This is your login page for the Faculty for those who are able to give or deliver the course</p>
         </div>
       </div>
     </div>
@@ -50,6 +50,7 @@
         {{ form.hidden_tag() }}
         
         <center><h2 class="logheader" style="color:white;">Login</h2></center>
+        <center><p class="logheader" style="color:white;">Enter your email address if your are Faculty to login</p></center>
         <center> <p style="color:white" class="myinput">
             {{ form.email.label }} :<br>
             {{ form.email(size=20,placeholder="Your Email") }}<br>
@@ -57,29 +58,10 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p></center>
-        <center><p  style="color:white" class="myinput">
-          {{ form.password.label }} :<br>
-          {{ form.password(size=20,placeholder="Your Password", id="password-field") }}
-          <button id="password-toggle" type="button" onclick="togglePasswordVisibility()">
-            <i class="fas fa-eye"></i>
-          </button>
-          {% for error in form.password.errors %}
-          <span style="color: red;">[{{ error }}]</span>
-          {% endfor %}
-      </p></center>
-      
-        <center><div class="checkbox-section" >
        
-          <p style="color:white">{{ form.remember() }} {{ form.remember.label }}</p>
-        </div></center>
         <center><p class="button" style="font-size: 20px" id ="login-form" class="button" style="font-size: 25px;color:black bold;">{{ form.submit()}}</p></center>
-        <div class="forgot-password-section" style="  margin-top: 5px;
-        text-align: center;">
-          <a href="/forgot_password">Forgot password?</a>
-        </div>
-        <center><div class="signup-section">
-          <p>Not registered? <a href="/register">Sign up</a></p>
-        </div></center>
+       
+       
       </form>
     </div>
   </div></center>
@@ -98,7 +80,7 @@
             if (data.status === 'success') {
                 window.alert(data.message);
                
-                window.location.href = '/teacherportal';
+                window.location.href = '/coursesview';
             } else {
                 window.alert(data.message);
             }

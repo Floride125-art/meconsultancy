@@ -2,14 +2,12 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <html lang="en">
   <head>
     {% block head %}
     <meta charset="utf-8">
-    <title>ME consultancy Empire</title>
+    <title>StudentFeed Summarizer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='plugins/bootstrap/bootstrap.min.css')}}">
     <!-- slick slider -->
     <link rel="stylesheet" href="{{ url_for('static', filename='plugins/slick/slick.css')}}">
@@ -27,8 +25,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/visit.css')}}" />
   
     <!--Favicon-->
-    <link rel="shortcut icon" href="{{ url_for('static', filename='images/meedu.png')}}" type="image/x-icon">
-    <link rel="icon" href="{{ url_for('static', filename='images/meedu.png')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/events/sdfeed.png')}}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='images/events/sdfeed.png')}}" type="image/x-icon">
     <link href='https://fonts.googleapis.com/css?family=Aclonica' rel='stylesheet'>
      <!-- Google Web Fonts -->
      <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -81,38 +79,11 @@
 <body>
 <header class="fixed-top header">
   <!-- top header -->
-  <div class="top-header py-2 bg-white">
-    <div class="container">
-      <div class="row no-gutters">
-        <div class="col-lg-4 text-center text-lg-left" id="topie">
-          <a class="text-color mr-3" href="tel:+250787497492"><strong>CALL</strong> +250787497492</a>
-          <ul class="list-inline d-inline">
-            <li class="list-inline-item mx-0"><a class="d-inline-block p-2 text-color" href="https://www.facebook.com/profile.php?id=100076308444873&mibextid=9R9pXO"><i class="ti-facebook"></i></a></li>
-            <li class="list-inline-item mx-0"><a class="d-inline-block p-2 text-color" href="https://twitter.com/meconsultancy_e?t=eaYUxygFYPzIXjpNUi6Uwg&s=09"><i class="ti-twitter-alt"></i></a></li>
-            <li class="list-inline-item mx-0"><a class="d-inline-block p-2 text-color" href="https://instagram.com/me_consultancy_empire_?igshid=MjEwN2IyYWYwYw=="><i class="ti-instagram"></i></a></li>
-          </ul>
-        </div>
-        <div class="col-lg-8 text-center text-lg-right">
-          <ul class="list-inline">
-            <li class="list-inline-item"><a class="text-uppercase text-color p-sm-2 py-2 px-0 d-inline-block" href="/work">Work abroad</a></li>
-        
-            <li class="list-inline-item"><a class="text-uppercase text-color p-sm-2 py-2 px-0 d-inline-block" href="/myscholarship">SCHOLARSHIP</a></li>
-            <li class="list-inline-item"><select class="text-uppercase text-color p-sm-2 py-2 px-0 d-inline-block" onchange="loginOptionSelected(this)" style="border: none;">
-              <option value="" disabled selected>Login</option>
-              <option value="/injira">Login as Student </option>
-              <option value="/injirayo">Login as Assistant</option>
-            </select></li>
-            <li class="list-inline-item"><a class="text-uppercase text-color p-sm-2 py-2 px-0 d-inline-block" href="/register">register</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
   <!-- navbar -->
   <div class="navigation w-100">
     <div class="container">
       <nav class="navbar navbar-expand-lg navbar-dark p-0">
-       <h2 style="font-family: 'Aclonica';font-size: 22px;"> <a class="navbar-brand" href="/" ><img src="{{ url_for('static', filename='images/meedu.png')}}" alt="logo" style="width:16%; height:16%"> ME Consultancy Empire</a></h2>
+       <h2 style="font-family: 'Aclonica';font-size: 22px;"> <a class="navbar-brand" href="/" ><img src="{{ url_for('static', filename='images/events/sdfeed.png')}}" alt="logo" style="width:16%; height:16%"> StudentFeed Summarizer</a></h2>
         <button class="navbar-toggler rounded-0" type="button" data-toggle="collapse" data-target="#navigation"
           aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -126,25 +97,22 @@
             <li class="{{ 'active' if active_page == 'about' else '' }} nav-item @@about">
               <a class="nav-link" href="/about">About</a>
             </li>
+            <li class="{{ 'active' if active_page == 'gallery' else '' }} nav-item @@blog">
+              <a class="nav-link" href="/garelly">Feedback</a>
+            </li> 
             <li class="{{ 'active' if active_page == 'service' else '' }} nav-item dropdown view">
               <a class="nav-link dropdown-toggle" href="/service" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Services
+                Login
               </a>
               <ul class="{{ 'active' if active_page == 'consultancy' else '' }} dropdown-menu" aria-labelledby="navbarDropdown">
-                <li class="{{ 'active' if active_page == 'consultancy' else '' }}"><a class="dropdown-item" href="/consultancyedu">Consultancy</a></li>
-                <li><a class="dropdown-item" href="/admission">Process admission</a></li>
-                <li class="{{ 'active' if active_page == 'visit' else '' }}"><a class="dropdown-item" href="/visit">Visit Rwanda</a></li>
+                <li class="{{ 'active' if active_page == 'consultancy' else '' }}"><a class="dropdown-item" href="/injira">Admin</a></li>
+  
+                <li class="{{ 'active' if active_page == 'visit' else '' }}"><a class="dropdown-item" href="/injirayo">Login as Faculty</a></li>
               </ul>
             </li>
-            <li class="{{ 'active' if active_page == 'visit' else '' }} nav-item @@blog">
-              <a class="nav-link" href="/visit">Travel</a>
-            </li> 
-            <li class="{{ 'active' if active_page == 'gallery' else '' }} nav-item @@blog">
-              <a class="nav-link" href="/garelly">Gallery</a>
-            </li> 
-            <li class="{{ 'active' if active_page == 'contact' else '' }} nav-item @@contact">
-              <a class="nav-link" href="/contact">CONTACT</a>
-            </li>
+           
+           
+           
           </ul>
         </div>
       </nav>
@@ -229,6 +197,7 @@
     {% endif %}
 {% endwith %}
 {% block body %}
+
 {% endblock %}
     <!-- footer -->
 {% block footer %}
@@ -255,42 +224,32 @@
       <div class="row">
         <div class="col-lg-4 col-sm-8 mb-5 mb-lg-0">
           <!-- logo -->
-          <h2 style="font-family: 'Aclonica';font-size: 18px; "> <a class="logo-footer" href="/"  style="color: white;"><img src="{{ url_for('static', filename='images/meedu.png')}}" alt="logo" style="width:30%; height:30%; "> ME Consultancy Empire</a></h2>
+          <h2 style="font-family: 'Aclonica';font-size: 22px;"> <a class="navbar-brand" href="/" ><img src="{{ url_for('static', filename='images/events/sdfeed.png')}}" alt="logo" style="width:16%; height:16%"> StudFeed Summarizer</a></h2>
 
           <ul class="list-unstyled">
-            <li class="mb-2">Kigali, Rwanda</li>
+            <li class="mb-2">Gujarat, India</li>
             <li class="mb-2">+250787497492</li>
             <li class="mb-2">+917373664</li>
-            <li class="mb-2">me@gmail.com</li>
+            <li class="mb-2">flo.tuyienge@gmail.com</li>
           </ul>
         </div>
         <!-- company -->
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-5 mb-md-0">
-          <h4 class="text-white mb-5">ME Consultancy</h4>
+          <h4 class="text-white mb-5">The StudFeed Summarizer</h4>
           <ul class="list-unstyled">
             <li class="mb-3"><a class="text-color" href="/about">About Us</a></li>
-            <li class="mb-3"><a class="text-color" href="/visit">Travel</a></li>
-            <li class="mb-3"><a class="text-color" href="/garelly">Garelly</a></li>
-            <li class="mb-3"><a class="text-color" href="/contact">Contact</a></li>
+            <li class="mb-3"><a class="text-color" href="/garelly">Feedback</a></li>
+            
           </ul>
         </div>
         <!-- links -->
-        <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-5 mb-md-0">
-          <h4 class="text-white mb-5">Services</h4>
-          <ul class="list-unstyled">
-            <li class="mb-3"><a class="text-color" href="/consultancyedu">Consultancy</a></li>
-            <li class="mb-3"><a class="text-color" href="events.html">Admission</a></li>
-            <li class="mb-3"><a class="text-color" href="/visit">Visit Rwanda</a></li>
-            <li class="mb-3"><a class="text-color" href="/myscholarship">Scholarship</a></li>
-            <li class="mb-3"><a class="text-color" href="/work">Work Abroad</a></li>
-          </ul>
-        </div>
+       
         <!-- support -->
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-5 mb-md-0">
           <h4 class="text-white mb-5">Portals</h4>
           <ul class="list-unstyled">
             <li class="mb-3"><a class="text-color" href="/injira">Students Portal</a></li>
-            <li class="mb-3"><a class="text-color" href="/injirayo">Assistant Portal</a></li>
+            <li class="mb-3"><a class="text-color" href="/injirayo">Faculty Portal</a></li>
           </ul>
         </div>
         <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-5 mb-md-0">
@@ -317,7 +276,7 @@
               var CurrentYear = new Date().getFullYear()
               document.write(CurrentYear)
             </script> 
-            , designed & developed by <a href="" class="text-muted">ME Consultancy Empire</a>
+            , designed & developed by <a href="" class="text-muted">StudentFeed Summarizer</a>
           </p>
         </div>
         <div class="col-sm-5 text-sm-right text-center">

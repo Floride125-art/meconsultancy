@@ -5,17 +5,16 @@
     <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
    
 </div>
-
+<center>
 <div class="row">
-
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card border-left-primary shadow h-100 py-2">
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Users registered</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ user_count }}</div>
+                            Teacher registered</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{  teacher_count }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-solid fa-users fa-2x text-gray-300"></i>
@@ -24,207 +23,38 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                            students applied</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{std_count }}</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-regular fa-book-open fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-info shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Bookings
-                        </div>
-                        <div class="row no-gutters align-items-center">
-                            <div class="col-auto">
-                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{form_count}}</div>
-                            </div>
-                            <div class="col">
-                               
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-warning shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                            Sent Inquiries</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{cont_count}}</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-comments fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+  </center>
 <div class="container">
-    <div class="row">
-        
-      <h1><center>Users Registered</center></h1>
+    <div class="row">  
+      <h1><center>Added Lecturer</center></h1>
       <table class="table">
           <thead>
             <tr>
-              <th>User id</th>
+              <th>Id</th>
               <th>Full Name</th>
-              <th>Phone Number</th>
-              <th>User's EmailId</th>
-              <th>Role</th>  
+              <th>Email</th>
+              <th>User's Subject</th>
             </tr>
           </thead>
           <tbody>
-            {% for pkg in usr %}
+            {% for tchr in teacher %}
             <tr>
-              <td>{{pkg.id}}</td> 
-              <td>{{pkg.name}}</td>
-              <td>{{pkg.number}}</td>
-              <td>{{pkg.email}}</td>
-              <td>{{pkg.role}}</td>
+              <td>{{tchr.id}}</td> 
+              <td>{{tchr.name}}</td>
+              <td>{{tchr.email}}</td>
+              <td>{{tchr.course}}</td>
+             
               <td></td>
-              <td>
-                {% if pkg.role == 'mentor' %}
-                Confirmed: {% if pkg.confirmed %}Yes{% else %}No{% endif %} |
-                  <a href="{{ url_for('confirm_mentor', user_id=pkg.id) }}">Confirm</a> |
-                  <a href="{{ url_for('confirm_mentor', user_id=pkg.id) }}">Reject</a>
-                {% endif %}
-              </td>
-              <td><a href="/edit/user/{{pkg.id}}"><button class="btn btn-primary">Update</button></a></td>
-              <td><a href="/delete/user/{{pkg.id}}"><button class="btn btn-primary">Delete</button></a></td>
+              
+              <td><a href="/edit/user/{{tchr.id}}"><button class="btn btn-primary">Update</button></a></td>
+              <td><a href="/delete/user/{{tchr.id}}"><button class="btn btn-primary">Delete</button></a></td>
             </tr>  
             {% endfor %}
           </tbody>
         </table>
       </div>
-      <div class="row">
-        
-        <h1><center>Students who applied</center></h1>
-        <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Phone Number</th>
-                <th>Email</th>
-                <th>Program</th> 
-                <th>Gender</th>  
-              </tr>
-            </thead>
-            <tbody>
-              {% for pkg in std %}
-              <tr>
-                <td>{{pkg.name}}</td>
-                <td>{{pkg.pnumber}}</td>
-                <td>{{pkg.email}}</td>
-                <td>{{pkg.program}}</td>
-                <td>{{pkg.gender}}</td>
-                <td></td>
-                <td><a href="/edit/student/{{pkg.id}}"><button class="btn btn-primary">Update</button></a></td>
-                <td><a href="/delete/student/{{pkg.id}}"><button class="btn btn-primary">Delete</button></a></td>
-              </tr>  
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        <div class="row">
-        
-          <h1><center>Booked Travel information</center></h1>
-          <table class="table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Phone Number</th>
-                  <th>Email</th>
-                  <th>Destination</th> 
-                  <th>Date</th>  
-                </tr>
-              </thead>
-              <tbody>
-                {% for info in form_data %}
-                <tr>
-                  <td>{{info.name}}</td>
-                  <td>{{info.phone}}</td>
-                  <td>{{info.email}}</td>
-                  <td>{{info.place2}}</td>
-                  <td>{{info.date2}}</td>
-                  <td></td>
-                  <td><a href="/edit/bookings/{{info.id}}"><button class="btn btn-primary">Update</button></a></td>
-                  <td><a href="/delete/Bookings/{{info.id}}"><button class="btn btn-primary">Delete</button></a></td>
-                </tr>  
-                {% endfor %}
-              </tbody>
-            </table>
-            <h1><center>Info of those who contacted</center></h1>
-          <table class="table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Subject</th>
-                  <th>Message</th> 
-                  <th>Date</th>  
-                </tr>
-              </thead>
-              <tbody>
-                {% for info in cont %}
-                <tr>
-                  <td>{{info.name}}</td>
-                  <td>{{info.mail}}</td>
-                  <td>{{info.subject}}</td>
-                  <td>{{info.message}}</td>
-                  <td>{{info.date}}</td>
-                  <td></td>
-                 
-                  <td><a href="/delete/contact/{{info.id}}"><button class="btn btn-primary">Delete</button></a></td>
-                </tr>  
-                {% endfor %}
-              </tbody>
-            </table>
-            <h1><center>Subscribers</center></h1>
-            <table class="table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Email</th>
-                    <th>Date</th>
-              
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for info in subscribe %}
-                  <tr>
-                    <td>{{info.id}}</td>
-                    <td>{{info.email}}</td>
-                    <td>{{info.date}}</td>
-            
-                    <td></td>
-                    <td><a href="/delete/subscribe/{{info.id}}"><button class="btn btn-primary">Delete</button></a></td>
-                  </tr>  
-                  {% endfor %}
-                </tbody>
-              </table>
-          </div>
+     
+      
     </div>
   
 

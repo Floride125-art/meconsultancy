@@ -38,25 +38,29 @@
   </style>
    <!-- Page Heading -->
    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Scholarships</h1>
-    <a href="/viewscholarship"><button>View The added Scholarships</button></a>
+    <h1 class="h3 mb-0 text-gray-800">Add a Teacher</h1>
+    <a href="/viewscholarship"><button>View The added Teachers</button></a>
    
 </div>
 
 <!-- Content -->
 <div>
   
-    <h1 style="align-items: center; text-align: center; color: black;">Scholarships</h1>
-    <p style="align-items: center; text-align: center; color: black;">This is a page for adding scholarship opportunities available</p>
+    <h1 style="align-items: center; text-align: center; color: black;">Teachers</h1>
+    <p style="align-items: center; text-align: center; color: black;">This is a page for adding teachers who will be allowed to view students marks</p>
     <form action="/scholarshipadd" method="POST">
-        <label for="title">Title:</label>
+        <label for="title">Full Name:</label>
         <input type="text" id="title" name="title" required>
+        <label for="title">Email:</label>
+        <input type="text" id="title" name="title" required>
+        
         
         <label for="description">Description:</label>
         <textarea id="description" name="description" required></textarea>
         
         <button type="submit">Add Admission</button>
       </form>
+      
 
 </div>
 {% endblock %}

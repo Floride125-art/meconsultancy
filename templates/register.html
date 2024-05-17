@@ -35,7 +35,7 @@
 
 </style>
 <body>
-  <section class="page-title-section overlay" data-background="{{ url_for('static', filename='images/banner/mepics.jpg')}}" style="background-repeat: no-repeat; background-size: cover;">
+  <section class="page-title-section overlay" data-background="{{ url_for('static', filename='images/events/mytyping.jpg')}}" style="background-repeat: no-repeat; background-size: cover;">
     <div class="container">
       <div class="row">
         <div class="col-md-8" style="margin-top: 10%;">
@@ -43,35 +43,20 @@
             <li class="list-inline-item"><a class="h2 text-primary font-secondary" href="/">Home</a></li>
             <li class="list-inline-item text-white h3 font-secondary nasted">Register</li>
           </ul>
-          <p class="text-lighten mb-0">This is sign up or register page for creating an account for you to be able to login in our system</p>
+          <p class="text-lighten mb-0">This page is for registering your email and receive login credentials such as email and password</p>
+         
         </div>
       </div>
     </div>
   </section>
   <center><div class="container" id="moncontainer">
     <div class="form-container" >
-      <form id="login-form" class="form" action="" method="post">
+      <form id="login-form" class="form" action="/register" method="post">
         {{ form.hidden_tag() }}
         
- <center> <h2 style="color:white" class="logheader">Sign Up</h2></center>
-       
-        <center> <p style="color:white" class="myinput">
-            {{ form.name.label}}:<br>
-            {{ form.name(size=20,placeholder="Your Name") }}<br>
-            {% for error in form.name.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p></center>
-       
- <center><p style="color:white" class="myinput">
-          {{ form.number.label}}:<br>
-          {{ form.number(size=20,placeholder="Your phone number") }}<br>
-          {% for error in form.number.errors %}
-          <span style="color: red;">[{{ error }}]</span>
-          {% endfor %}
-      </p></center>
-     
-     
+ <center> <h2 style="color:white" class="logheader">Register</h2></center>
+ <center> <p style="color:white" class="logheader">Enter your email to receive login credentials</p></center>
+ <center> <p class="text-lighten mb-0">N.B: Only authorized Lecturer are allowed to register and get login credentials in order to login</p></center>
  <center>  <p style="color:white" class="myinput" id="">
         {{ form.email.label}} :<br>
         {{ form.email(size=20,placeholder="email@gmail.com") }}<br>
@@ -79,39 +64,6 @@
         <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
       </p></center>
-      
- <center> <p style="color:white" class="myinput">
-        {{ form.password.label}} :<br>
-        {{ form.password(size=20,placeholder="Set Password", id="password-field") }}
-        <button id="password-toggle" type="button" onclick="togglePasswordVisibility()">
-          <i class="fas fa-eye"></i>
-        </button>
-        {% for error in form.password.errors %}
-        <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-      </p></center>
-      
- <center> <p  style="color:white" class="myinput">
-        {{ form.password2.label}} :<br>
-        {{ form.password2(size=20,placeholder="Confirm Password") }}<br>
-        
-        {% for error in form.password2.errors %}
-      <span style="color: red;">[{{ error }}]</span>
-      {% endfor %}
-  </p> </center>
-
- <center> <p style="color:white" class="myinput">
-    {{ form.role.label }}:<br>
-    <select id="role" name="role" required>
-      <option value="" disabled selected>Select a role</option>
-      <option value="student">Student</option>
-      <option value="mentor">Assistant</option>
-      <option value="admin">Admin</option>
-  </select>
-  </p></center>
-  
-   
-
   <center><p class="button" style="font-size: 20px" id="register-form" class="button" style="font-size: 25px;color:black bold;">{{ form.submit()}}</p></center>
         <div class="signup-section">
           <center><p>Arleady registered? <a href="/injira">Login</a></p></center>

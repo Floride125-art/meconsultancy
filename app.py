@@ -161,6 +161,52 @@ def ahabanza():
 
     return render_template('ahabanza.html')
 
+
+@app.route('/coursedashboard', methods=['GET', 'POST'])
+def coursedashboard():
+    if request.method == 'POST':
+        try:
+            username = request.form.get('username')
+            password = request.form.get('password')
+            role = request.form.get('role')
+            email = request.form.get('email')
+
+            if not password:
+                return 'Password is required!'
+
+            if not role:
+                return 'Role is required!'
+
+            if not email:
+                return 'Email is required!'
+
+            if MyUser.query.filter_by(username=username).first():
+                return 'Username already exists!'
+
+            if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                return 'Invalid email format!'
+
+            if not re.match(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", password):
+                return 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character!'
+
+            if role == 'mentor':
+                new_mentor_request = MentorRequest(username=username, email=email)
+                db.session.add(new_mentor_request)
+                db.session.commit()
+                
+                return redirect(url_for('mentor_login'))
+
+            new_user = MyUser(username=username, password=password, role=role)
+            db.session.add(new_user)
+            db.session.commit()
+
+            return redirect(url_for('banza'))
+
+        except BadRequestKeyError:
+            return 'Invalid form data!'
+
+    return render_template('coursedashboard.html')
+
 # Mentor login route
 @app.route('/mentor/login', methods=['GET', 'POST'])
 def mentor_login():
@@ -201,10 +247,34 @@ def mydashboard():
    cont_count = len(cont)
    std_count = len(std)
    subscribe = Subscribe.query.all()
-   return render_template('admin_dashboard.html',std_count= std_count, cont_count= cont_count, form_count=form_count, user_count=  user_count, usr=usr,std=std,packg=packg,hotl=hotl,cont=cont,feedb=feedb,paym=paym, trans=trans, form_data=form_data, subscribe=subscribe)
+   teacher = OurTeacher.query.all()
+   teacher_count = len(teacher)
+   
+   return render_template('admin_dashboard.html',  teacher_count=teacher_count, teacher= teacher, std_count= std_count, cont_count= cont_count, form_count=form_count, user_count=  user_count, usr=usr,std=std,packg=packg,hotl=hotl,cont=cont,feedb=feedb,paym=paym, trans=trans, form_data=form_data, subscribe=subscribe)
 @app.route('/mentor_dashboard')
 def mentor_dashboard():
     return render_template('mentor_dashboard.html')
+
+
+@app.route('/myteacher')
+def myteacher():
+   usr=User.query.all()
+   user_count = len(usr)
+   std= StudentForm.query.all()
+   packg=Package.query.all()
+   hotl=Hotel.query.all()
+   trans=Transport.query.all()
+   cont=Contact.query.all()
+   feedb=Feedback.query.all()
+   paym=Payment.query.all()
+   form_data = FormData.query.all()
+   form_count = len(form_data)
+   cont_count = len(cont)
+   std_count = len(std)
+   subscribe = Subscribe.query.all()
+   teacher = OurTeacher.query.all()
+   teacher_count = len(teacher)
+   return render_template('viewfeedbacks.html',  teacher_count=teacher_count, teacher= teacher, std_count= std_count, cont_count= cont_count, form_count=form_count, user_count=  user_count, usr=usr,std=std,packg=packg,hotl=hotl,cont=cont,feedb=feedb,paym=paym, trans=trans, form_data=form_data, subscribe=subscribe)
 
 @app.route('/mentor-confirmation')
 def mentor_confirmation():
@@ -437,6 +507,13 @@ class Admission(db.Model):
     subtitle = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     image_data = db.Column(db.LargeBinary)
+    
+class OurTeacher(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name= db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    course = db.Column(db.Text, nullable=False)
+
 
 class Work(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -470,6 +547,24 @@ class Scholarship(db.Model):
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
  
+ 
+class StudentFeedbacks(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    rname = db.Column(db.String(100), nullable=False)
+    trimester = db.Column(db.String(100), nullable=False)
+    stream = db.Column(db.String(100), nullable=False)
+    sem7cse = db.Column(db.String(100), nullable=False)
+    feedback = db.Column(db.Text, nullable=False)
+ 
+class CourseList(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    course = db.Column(db.String(100), nullable=False)
+    code = db.Column(db.String(20), nullable=False)
+    semester = db.Column(db.Integer, nullable=False)
+    major = db.Column(db.String(100), nullable=False)
+    category = db.Column(db.String(100), nullable=False)
+
 class Bookingz(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -507,7 +602,11 @@ class Subscribe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), nullable=False) 
     date = db.Column(db.Integer, nullable=True)
-  
+
+class InjiraForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Login')
+
 with app.app_context():
     db.create_all()
 
@@ -520,25 +619,17 @@ def home():
 
 @app.route('/injirayo', methods=['GET', 'POST'])
 def injirayo():
-    form = LoginForm(csrf_enabled=False)
+    form = InjiraForm(csrf_enabled=False)
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and user.check_password(form.password.data):
-            if user.role == 'mentor':
-                if user.confirmed:
-                    login_user(user, remember=form.remember.data)
-                    return jsonify({'status': 'success', 'message': 'Login Successful!  Click ok'})
-                else:
-                    
-                    return jsonify({'status': 'error', 'message': 'Waiting for admin confirmation'})
-            else:
-                flash('Invalid credentials. Please log in with the appropriate credentials.', 'error')
-                return jsonify({'status': 'error', 'message': 'Invalid credentials'})
+        email = form.email.data
+        teacher = OurTeacher.query.filter_by(email=email).first()
+        if teacher:
+            session['teacher_id'] = teacher.id
+            return jsonify({'status': 'success', 'message': 'Login Successful! Click ok'})
         else:
-            
-            return jsonify({'status': 'error', 'message': 'Invalid credentials! wrong email or password'})
-    return render_template('injirayo.html', form=form)
+            return jsonify({'status': 'error', 'message': 'Invalid email! Please contact admin.'})
 
+    return render_template('injirayo.html', form=form)
 
 from flask import Flask, render_template, request, jsonify
 
@@ -555,7 +646,7 @@ def injira():
             if user and user.check_password(form.password.data):
                 login_user(user, remember=form.remember.data)
                
-                return redirect(url_for('welcome'))
+                return redirect(url_for('injira')) #changed welcome to injira
             else:
                 
                 return render_template('erroradminpage.html')
@@ -567,37 +658,48 @@ def injira():
 def load_user(user_id):
     return User.get(user_id)  
 
+import smtplib
+import secrets
+import string
+
+smtp_host = 'smtp.elasticemail.com'
+smtp_port = 587
+username = 'flo.tuyisenge@gmail.com'
+password = 'DCCFC4389D435771FA8FDDDBA2E2F6CA8C71'
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm(csrf_enabled=False)
-    if form.validate_on_submit():
-        existing_user_email = User.query.filter_by(email=form.email.data).first()
-        existing_user_number = User.query.filter_by(number=form.number.data).first()
-        if existing_user_email:
-            return render_template('errorregister.html', title='Register', form=form)
+    email = form.email.data
+    if OurTeacher.query.filter_by(email=form.email.data).first():
+        flash('Email is not valid or not from the database table.', 'error')
+        password_characters = string.ascii_letters + string.digits
+        password = ''.join(secrets.choice(password_characters) for i in range(10))
+        sender_email = username
+        receiver_email = email
+        message = f"""\
+            
+        Subject: Login Credentials
+        Your login credentials:
+        Email: {email}
+        Password: {password}
+        Click the following link to access the login form:
+        {request.url_root}injira
+        Please keep your password safe and do not share it with anyone."""
+        with smtplib.SMTP("smtp.elasticemail.com", 587) as smtp:
+                smtp.starttls()
+                smtp.login(username, password)
+                smtp.sendmail(sender_email, receiver_email, message)
+        flash('An email with login credentials has been sent to your email address.', 'success')
+        return render_template('logthanks.html', form=form)
+    else:
+        flash('Email is not valid or not from the database table.', 'error')
+    return render_template('register.html', form=form)
 
-        if existing_user_number:
-            return render_template('errorregister.html', title='Register', form=form)
+     
+        
 
-        user = User(name=form.name.data, number=form.number.data, email=form.email.data, role=form.role.data)
-        user.set_password(form.password.data)
 
-        try:
-            db.session.add(user)
-            db.session.commit()
-            if form.role.data == 'mentor':
-                new_mentor_request = MentorRequest(username=form.name.data, email=form.email.data)
-                db.session.add(new_mentor_request)
-                db.session.commit()
-                return redirect(url_for('injirayo'))
-            return redirect(url_for('injira'))
-        except IntegrityError:
-            db.session.rollback()
-            flash('An error occurred while registering the user. Please try again.', 'danger')
-
-    return render_template('register.html', title='Register', form=form)
-   
 
 @app.route('/update_status/<int:student_id>/<status>')
 def update_status(student_id, status):
@@ -663,6 +765,16 @@ def consultancyedu():
 @app.route('/admissionPage')
 def admnscholarship():
     return render_template('admissionPage.html')
+
+
+@app.route('/addteacherPage')
+def addteacherPage():
+    return render_template('addteacher.html')
+
+
+@app.route('/addcoursePage')
+def addcoursePage():
+    return render_template('addcourse.html')
 @app.route('/workPage')
 def workPage():
     return render_template('workadd.html')
@@ -706,6 +818,50 @@ def add_admission():
     return redirect('/admissionPage')
 
 
+@app.route('/teacheradd', methods=['POST'])
+def add_teacher():
+    name = request.form['name']
+    email = request.form['email']
+    course = request.form['course']
+   
+    # Check if the email already exists in the database
+    existing_teacher = OurTeacher.query.filter_by(email=email).first()
+    if existing_teacher:
+        flash('Email already exists. Please use a different email.', 'error')
+        return redirect(url_for('addteacherPage'))
+       
+    # If email is unique, proceed to add the teacher
+    teacher = OurTeacher(name=name, email=email, course=course)
+    db.session.add(teacher)
+    db.session.commit()
+
+    flash('Teacher added successfully', 'success')
+    return redirect('/mydashboard')
+
+@app.route('/courseadd', methods=['POST'])
+def add_course():
+    if request.method == 'POST':
+        course_name = request.form['course']
+        code = request.form['code']
+        semester = request.form['semester']
+        major = request.form['major']
+        category = request.form['category']
+        
+        new_course = CourseList(course=course_name, code=code, semester=semester, major=major, category=category)
+        
+        try:
+            db.session.add(new_course)
+            db.session.commit()
+            flash('Course added successfully!', 'success')
+        except:
+            db.session.rollback()
+            flash('An error occurred. Please try again.', 'danger')
+        finally:
+            db.session.close()
+            
+        return redirect('/mydashboard')
+
+    
 @app.route('/workadd', methods=['POST'])
 def add_work():
     title = request.form['title']
@@ -1028,6 +1184,80 @@ import smtplib
 
 
 
+@app.route('/studfeed', methods=['GET', 'POST'])
+def studfeed():
+    if request.method == 'POST':
+        name = request.form['name']
+        rname = request.form['rname']
+        trimester = request.form['trimester']
+        stream = request.form['stream']
+        sem7cse = request.form['sem7cse']
+        feedback = request.form['feedback']
+        
+       
+
+        # Perform form validation
+        if not name or not rname or not  trimester or not stream or not sem7cse or not feedback:
+            return "Please fill out all fields."
+        
+        studentdetails = StudentFeedbacks(
+            name = name,
+            rname = rname,
+            trimester = trimester,
+            stream =stream,
+            sem7cse = sem7cse,
+            feedback = feedback,
+
+        )
+      
+        db.session.add(studentdetails)
+        db.session.commit()
+
+        return redirect('/thankyou')
+    studentdetail = StudentForm.query.all()
+    admission_letters = {}
+
+    
+    return render_template('garelly.html', admission_letters=admission_letters)
+
+@app.route('/view_feedback/<course_code>', methods=['GET'])
+def view_feedback(course_code):
+    feedbacks = StudentFeedbacks.query.filter_by(sem7cse=course_code).all()
+    feedbacksCount = len(feedbacks) 
+    courses = CourseList.query.all()
+  
+    return render_template('feedback_view.html', courses=courses, feedbacksCount= feedbacksCount, feedbacks=feedbacks, course_code=course_code)
+
+
+from flask import Flask, render_template, request, jsonify, redirect, url_for
+from transformers import pipeline, AutoModelForSeq2SeqLM, AutoTokenizer
+import os
+
+model_name = "Daye34/student-feedback-summarizer"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+
+
+@app.route('/view_individual_feedback/<int:feedback_id>/<course_code>', methods=['GET', 'POST'])
+def view_individual_feedback(feedback_id, course_code):
+    feedback = StudentFeedbacks.query.get(feedback_id)
+    feedbacks = StudentFeedbacks.query.filter_by(sem7cse=course_code).all()
+    feedbacks_count = len(feedbacks) 
+   
+    
+    if request.method == 'POST':
+        feedback_text = feedback.feedback
+        inputs = tokenizer.encode("summarize: " + feedback_text, return_tensors="pt", max_length=512, truncation=True)
+        summary_ids = model.generate(inputs, max_length=150, min_length=20, length_penalty=2.0, num_beams=4, early_stopping=True)
+        summarized_text = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+        return jsonify({"summary": summarized_text})
+      
+
+    if feedback:
+        return render_template('summarizefeedback.html', feedback=feedback, course_code=course_code, feedbacks_count=feedbacks_count, feedbacks=feedbacks)
+    else:
+        return redirect(url_for('view_feedback', course_code=feedback.sem7cse, feedbacks_count=feedbacks_count, feedbacks=feedbacks))
+
 @app.route('/send_email', methods=['POST'])
 def send_email():
     recipient_email = request.form['recipient_email']
@@ -1114,12 +1344,12 @@ def upload_admission_letter(studentId):
         return render_template('erroradmission.html')
 
     filename = secure_filename(admission_letter.filename)
-    admission_letter_data = admission_letter.read()  # Get the binary data of the admission letter
+    admission_letter_data = admission_letter.read()  
 
     admission = AdmissionLetter(
         senderemail=student.senderemail,
         filename=filename,
-        admission_data=admission_letter_data,  # Save the binary data directly in the database
+        admission_data=admission_letter_data,  
         student_id=studentId,
         notes = notes
     )
@@ -1177,8 +1407,6 @@ def addadmission():
         return redirect('/thanksletter')
 
     return render_template('teacherportal.html')
-
-
 
 
 from flask import render_template, request
@@ -1334,6 +1562,11 @@ def service():
 @app.route('/thankyou')
 def thankyou():
     return render_template('thankyou.html')
+
+@app.route('/coursesview')
+def coursesview():
+    courses = CourseList.query.all()
+    return render_template('coursesview.html', courses=courses)
 
 @app.route('/admprof')
 def admprof():
@@ -1540,11 +1773,11 @@ def logout():
 @app.route('/delete/user/<int:id>')
 def delete(id):
     if 'user' in session and session['user'] == 'Admin':
-        deletePkg = User.query.get_or_404(id)
+        deletePkg = OurTeacher.query.get_or_404(id)
         try:
             db.session.delete(deletePkg)
             db.session.commit()
-            flash('User Info successfully Deleted')
+            flash('Teacher Info successfully Deleted')
             return redirect('/mydashboard')
         except:
             return 'There was an issue to delete task'
@@ -1716,21 +1949,19 @@ def editUser(id):
         if request.method == 'POST':
             name = request.form.get('name')
             email = request.form.get('email')
-            number = request.form.get('number')
-            role = request.form.get('role')
-
+            course = request.form.get('course')
+        
             if id:
-                post = User.query.filter(User.id ==id).first()
+                post = OurTeacher.query.filter(OurTeacher.id ==id).first()
                 post.name = name 
-                post.number = number
                 post.email = email
-                post.role = role
+                post.course = course
                 
                 db.session.commit()
-                flash("User Updated!")
-                return redirect('/edit/user/'+str(id))
+                flash("Teacher Updated!")
+                return redirect('/mydashboard')
 
-        post = User.query.filter(User.id==id).first()
+        post = OurTeacher.query.filter(OurTeacher.id==id).first()
         return render_template('edit_user.html', post=post,id=id)       
 
 @app.route("/edit/details/<int:id>", methods = ['GET', 'POST'])
